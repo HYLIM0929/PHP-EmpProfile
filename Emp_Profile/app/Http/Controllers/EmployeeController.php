@@ -8,7 +8,6 @@ class EmployeeController extends Controller
 {
     public function store(Request $request)
     {
-        // Validate input
         $data = $request->validate([
             'name'           => 'required|string|max:255',
             'gender'         => 'required|in:Male,Female,Other',
@@ -25,7 +24,6 @@ class EmployeeController extends Controller
         $file = storage_path('app/employees.json');
 
         try {
-            // Ensure the storage/app directory exists
             $directory = dirname($file);
             if (!is_dir($directory)) {
                 if (!mkdir($directory, 0775, true)) {
@@ -33,12 +31,10 @@ class EmployeeController extends Controller
                 }
             }
 
-            // Check if directory is writable
             if (!is_writable($directory)) {
                 throw new \Exception('Storage directory is not writable');
             }
 
-            // Read existing employees or create empty array if file missing
             $employees = [];
             if (file_exists($file)) {
                 $content = file_get_contents($file);
@@ -54,10 +50,8 @@ class EmployeeController extends Controller
                 }
             }
 
-            // Add new employee data
             $employees[] = $data;
 
-            // Save back to file with pretty print
             $jsonData = json_encode($employees, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             if ($jsonData === false) {
                 throw new \Exception('Failed to encode employee data to JSON');
@@ -117,7 +111,6 @@ class EmployeeController extends Controller
 
     public function create()
     {
-        // Return the Blade view with your form
         return view('employees.create');
     }
 }
